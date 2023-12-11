@@ -1,0 +1,23 @@
+{
+	"workbench.editor.enablePreview": false,
+	"files.associations": {
+		"chrono": "cpp",
+		"functional": "cpp"
+	},
+	"files.trimTrailingWhitespace": false,
+	"editor.fontSize": 20,
+	"editor.autoIndent": "advanced",
+	"editor.detectIndentation": false,
+	"editor.renderWhitespace": "all",
+	"editor.insertSpaces": false,
+	"editor.minimap.enabled": false,
+	"editor.autoClosingBrackets": "never",
+	"editor.formatOnType": false,
+	"editor.acceptSuggestionOnEnter": "off",
+	"editor.acceptSuggestionOnCommitCharacter": false,
+	"terminal.integrated.fontSize": 20,
+	"markdown.preview.fontSize": 20,
+	"editor.autoClosingQuotes": "never",
+	"editor.autoSurround": "never",
+	"C_Cpp.errorSquiggles": "Enabled",
+}
