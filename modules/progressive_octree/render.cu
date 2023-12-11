@@ -107,6 +107,7 @@ void drawPoint(Point point, Node* node, uint64_t* framebuffer, bool* deviceDebug
 
 			if(encoded < framebuffer[pixelID]){
 				atomicMin(&framebuffer[pixelID], encoded);
+				// atomicMin(&framebuffer[pixelID], 
 			}
 		}
 

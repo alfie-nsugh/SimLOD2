@@ -281,7 +281,7 @@ Uniforms getUniforms(shared_ptr<GLRenderer> renderer){
 	//glm::mat4 world;
 	glm::mat4 view = renderer->camera->view;
 	glm::mat4 proj = renderer->camera->proj;
-	glm::mat4 worldViewProj = proj * view //* world;
+	glm::mat4 worldViewProj = proj * view; //* world;
 	//glm::mat4 worldViewProj = proj * view * world;
 	world = glm::transpose(world);
 	view = glm::transpose(view);

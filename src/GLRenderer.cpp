@@ -3,7 +3,10 @@
 
 #include "GLRenderer.h"
 #include "Runtime.h"
+#include <iostream>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 namespace fs = std::filesystem;
 
 auto _controls = make_shared<OrbitControls>();
@@ -25,6 +28,79 @@ static void APIENTRY debugCallback(GLenum source, GLenum type, GLuint id, GLenum
 void error_callback(int error, const char* description){
 	fprintf(stderr, "Error: %s\n", description);
 }
+
+void captureAndSaveImage(int width, int height, const std::string& filename) {
+    // Allocate memory to store pixel data
+    std::vector<unsigned char> pixels(3 * width * height); // RGB format
+
+    // Read the framebuffer into the pixel buffer
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+    // Flip the image vertically (if needed)
+    for (int i = 0; i < height / 2; ++i) {
+        for (int j = 0; j < width * 3; ++j) {
+            std::swap(pixels[i * width * 3 + j], pixels[(height - 1 - i) * width * 3 + j]);
+        }
+    }
+    // Save the image using stb_image_write
+    //stbi_flip_vertically_on_write(true); // Ensure proper orientation
+    if (!stbi_write_png(filename.c_str(), width, height, 3, pixels.data(), 0)) {
+        // Handle image saving error
+    }
+}
+
+
+/*
+// Capture the framebuffer and save it as an image
+void captureAndSaveImage(const std::string& baseFilename) {
+    GLFWwindow* window = glfwGetCurrentContext();
+
+    if (!window) {
+        std::cerr << "Error: No GLFW window is current." << std::endl;
+        return;
+    }
+
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+
+    // Allocate memory to store pixel data
+    std::vector<unsigned char> pixels(3 * width * height); // RGB format
+
+    // Read the framebuffer into the pixel buffer
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+
+    // Flip the image vertically (if needed)
+    for (int i = 0; i < height / 2; ++i) {
+        for (int j = 0; j < width * 3; ++j) {
+            std::swap(pixels[i * width * 3 + j], pixels[(height - 1 - i) * width * 3 + j]);
+        }
+    }
+
+    // Generate a unique filename
+    int counter = 0;
+    std::string filename;
+
+    do {
+        std::ostringstream oss;
+        oss << baseFilename << "_" << std::setfill('0') << std::setw(2) << counter << ".png";
+        filename = oss.str();
+        counter++;
+    } while (std::filesystem::exists(filename));
+
+    // Save the image using stb_image_write
+    //stbi_flip_vertically_on_write(true); // Ensure proper orientation
+    if (!stbi_write_png(filename.c_str(), width, height, 3, pixels.data(), 0)) {
+        // Handle image saving error
+        std::cerr << "Error: Failed to save the image." << std::endl;
+    } else {
+        std::cout << "Image saved to disk as " << filename << std::endl;
+    }
+}
+
+*/
+
+
+
+
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
 
