@@ -29,6 +29,7 @@ using namespace fmt;
 #include "HostDeviceInterface.h"
 #include "SimlodLoader.h"
 #include "LasLoader.h"
+#include "RecordMultipleImages.h" // Used for a button to record multiple images
 
 using namespace std;
 
@@ -1207,7 +1208,6 @@ int main(){
 				printfmt("setting lastBatchFinishedDevice = {} \n", lastBatchFinishedDevice ? "true" : "false");
 			}
 		}
-
 		if(Runtime::showGUI)
 		{ // RENDER IMGUI SETTINGS WINDOW
 
@@ -1417,6 +1417,36 @@ int main(){
 
 			 if(ImGui::Button("Do Color Filtering!")){
 			 	requestColorFiltering = true;
+			 }
+			 // This activates a loop that captures multiple images but makes sure the camera is in the right position
+			 if(ImGui::Button("Record multiple images")){
+				recordMultipleImages = true;
+				first = true;
+				iterationImage = 0;
+				
+			 }
+
+			 if (recordMultipleImages  ) {
+			 // first flips between true and false this way we can set the camera position and then capture the image later on
+				if (first) {
+					first = false;
+					// set renderer->controls->yaw, pitch, radius, target
+					renderer->controls->yaw    = coordinates_arr[iterationImage].yaw;
+					renderer->controls->pitch  = coordinates_arr[iterationImage].pitch;
+					renderer->controls->radius = coordinates_arr[iterationImage].radius;
+					renderer->controls->target = { coordinates_arr[iterationImage].target[0], coordinates_arr[iterationImage].target[1], coordinates_arr[iterationImage].target[2], };
+				}
+				else{
+					// capture and save image
+					std::string currImgFilename = "captured_image_" + std::to_string(iterationImage) + ".png";
+					captureAndSaveImage(renderer->width, renderer->height, currImgFilename);
+					iterationImage++;
+					first = true;
+				}
+				if (iterationImage > coordinates_arr.size() - 1) {
+					recordMultipleImages = false;
+				}
+
 			 }
 
 			 if(ImGui::Button("print the matrices")){

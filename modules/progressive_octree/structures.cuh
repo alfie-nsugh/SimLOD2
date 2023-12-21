@@ -32,6 +32,7 @@ struct Point{
 	float y;
 	float z;
 	uint32_t color;
+	
 };
 
 struct Voxel{
